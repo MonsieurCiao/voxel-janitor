@@ -57,6 +57,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space) && grounded && readyToJump)
         {
+            grounded = false;
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown);
         }
