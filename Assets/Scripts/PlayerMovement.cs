@@ -57,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space) && grounded && readyToJump)
         {
-            grounded = false;
+            readyToJump = false;
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown);
         }
@@ -78,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (flatVel.magnitude > moveSpeed)
         {
-            Vector3 limitedVelocity = flatVel * moveSpeed;
+            Vector3 limitedVelocity = flatVel.normalized * moveSpeed;
             rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
         }
     }
@@ -87,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
         //reset y vel
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
-        rb.AddForce(transform.up * jumpForce * 1000 * Time.deltaTime, ForceMode.Impulse);
+        rb.AddForce(transform.up * jumpForce * 10, ForceMode.Impulse);
     }
     private void ResetJump()
     {
