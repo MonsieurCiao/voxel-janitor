@@ -25,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveDirection;
     Rigidbody rb;
 
+    public Transform groundChecker;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -32,8 +34,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.1f, whatIsGround);
-        Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight * 0.5f + 0.1f, transform.position.z), Color.blue);
+        grounded = Physics.CheckSphere(groundChecker.position, 0.1f, whatIsGround);
         Debug.Log(grounded);
 
         MyInput();
@@ -66,9 +67,9 @@ public class PlayerMovement : MonoBehaviour
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         if (grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * moveSpeed * 1000 * Time.deltaTime, ForceMode.Force);
         else //in air
-            rb.AddForce(moveDirection.normalized * moveSpeed * airMultiplier, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * moveSpeed * 1000 * airMultiplier * Time.deltaTime, ForceMode.Force);
     }
     private void SpeedControl()
     {
@@ -85,7 +86,7 @@ public class PlayerMovement : MonoBehaviour
         //reset y vel
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
-        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        rb.AddForce(transform.up * jumpForce * 1000 * Time.deltaTime, ForceMode.Impulse);
     }
     private void ResetJump()
     {
